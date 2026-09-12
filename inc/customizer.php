@@ -228,14 +228,66 @@ function vv_customize_register( $wp_customize ) {
 	) );
 
 	$wp_customize->add_setting( 'vv_footer_tagline', array(
-		'default'           => __( 'Handwoven heritage, cut for the way you live now. Made in India, shipped worldwide.', 'vastra-veda' ),
-		'sanitize_callback' => 'sanitize_text_field',
+		'default'           => __( "A quiet celebration\nof the handloom — sarees and textiles gathered from weaving houses across India, chosen for their craft and the hands that made them.", 'vastra-veda' ),
+		'sanitize_callback' => 'wp_kses_post',
 	) );
 	$wp_customize->add_control( 'vv_footer_tagline', array(
-		'label'   => __( 'Tagline', 'vastra-veda' ),
+		'label'       => __( 'Brand paragraph', 'vastra-veda' ),
+		'description' => __( 'Line breaks are preserved.', 'vastra-veda' ),
+		'section'     => 'vv_footer',
+		'type'        => 'textarea',
+	) );
+
+	/* Column headings — the links themselves come from Appearance → Menus. */
+	$vv_footer_titles = array(
+		'vv_footer_col1_title' => array( __( 'Column 1 heading', 'vastra-veda' ), __( 'Quick Link', 'vastra-veda' ) ),
+		'vv_footer_col2_title' => array( __( 'Column 2 heading', 'vastra-veda' ), __( 'Support', 'vastra-veda' ) ),
+		'vv_footer_col3_title' => array( __( 'Column 3 heading', 'vastra-veda' ), __( 'Legal', 'vastra-veda' ) ),
+		'vv_footer_col4_title' => array( __( 'Column 4 heading', 'vastra-veda' ), __( 'Location', 'vastra-veda' ) ),
+	);
+	foreach ( $vv_footer_titles as $vv_key => $vv_meta ) {
+		$wp_customize->add_setting( $vv_key, array(
+			'default'           => $vv_meta[1],
+			'sanitize_callback' => 'sanitize_text_field',
+		) );
+		$wp_customize->add_control( $vv_key, array(
+			'label'   => $vv_meta[0],
+			'section' => 'vv_footer',
+			'type'    => 'text',
+		) );
+	}
+
+	$wp_customize->add_setting( 'vv_footer_col4_text', array(
+		'default'           => __( 'New drapes, weaving stories and care notes, once in a while.', 'vastra-veda' ),
+		'sanitize_callback' => 'wp_kses_post',
+	) );
+	$wp_customize->add_control( 'vv_footer_col4_text', array(
+		'label'   => __( 'Column 4 text', 'vastra-veda' ),
 		'section' => 'vv_footer',
 		'type'    => 'textarea',
 	) );
+
+	/* Social profiles — leave a field empty to hide that icon. */
+	$vv_socials = array(
+		'facebook'  => array( __( 'Facebook URL', 'vastra-veda' ), '#' ),
+		'instagram' => array( __( 'Instagram URL', 'vastra-veda' ), '#' ),
+		'youtube'   => array( __( 'YouTube URL', 'vastra-veda' ), '#' ),
+		'x'         => array( __( 'X URL', 'vastra-veda' ), '#' ),
+		'pinterest' => array( __( 'Pinterest URL', 'vastra-veda' ), '' ),
+		'whatsapp'  => array( __( 'WhatsApp URL', 'vastra-veda' ), '' ),
+	);
+	foreach ( $vv_socials as $vv_key => $vv_meta ) {
+		$wp_customize->add_setting( 'vv_social_' . $vv_key, array(
+			'default'           => $vv_meta[1],
+			'sanitize_callback' => 'sanitize_text_field',
+		) );
+		$wp_customize->add_control( 'vv_social_' . $vv_key, array(
+			'label'       => $vv_meta[0],
+			'description' => 'facebook' === $vv_key ? __( 'Empty hides the icon.', 'vastra-veda' ) : '',
+			'section'     => 'vv_footer',
+			'type'        => 'text',
+		) );
+	}
 
 	/* Live-refresh the simple text bits. */
 	$wp_customize->get_setting( 'blogname' )->transport = 'postMessage';

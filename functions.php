@@ -46,10 +46,10 @@ function vv_setup() {
 		array(
 			'primary'  => __( 'Primary (header, beside the icons)', 'vastra-veda' ),
 			'offcanvas' => __( 'Slide-out menu (hamburger)', 'vastra-veda' ),
-			'footer_shop'    => __( 'Footer — Shop', 'vastra-veda' ),
-			'footer_help'    => __( 'Footer — Help', 'vastra-veda' ),
-			'footer_about'   => __( 'Footer — About', 'vastra-veda' ),
-			'footer_legal'   => __( 'Footer — Legal (bottom bar)', 'vastra-veda' ),
+			'footer_quick'    => __( 'Footer — Quick Link', 'vastra-veda' ),
+			'footer_support'  => __( 'Footer — Support', 'vastra-veda' ),
+			'footer_policies' => __( 'Footer — Legal', 'vastra-veda' ),
+			'footer_bottom'   => __( 'Footer — Bottom bar (optional)', 'vastra-veda' ),
 		)
 	);
 

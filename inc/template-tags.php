@@ -52,6 +52,14 @@ function vv_icon( $name, $size = 18 ) {
 		'plus'   => '<path d="M12 5v14M5 12h14"/>',
 		'heart'  => '<path d="M12 20s-7-4.6-7-9.4A4.1 4.1 0 0 1 12 7.7a4.1 4.1 0 0 1 7 2.9C19 15.4 12 20 12 20Z"/>',
 		'menu'   => '<path d="M4 8h16M4 16h16"/>',
+		/* Social glyphs — simple outline marks, sized for the 36px rings. */
+		'facebook'  => '<path d="M14.6 7.2h1.6V4.6h-2.2c-1.9 0-3.1 1.2-3.1 3.2v1.9H8.6v2.6h2.3V19.4h2.7v-7.1h2.2l.4-2.6h-2.6V8.2c0-.7.3-1 1-1Z"/>',
+		'instagram' => '<rect x="4.4" y="4.4" width="15.2" height="15.2" rx="4.4"/><circle cx="12" cy="12" r="3.6"/><circle cx="16.6" cy="7.4" r=".9" fill="currentColor" stroke="none"/>',
+		'youtube'   => '<rect x="3.2" y="6.4" width="17.6" height="11.2" rx="3.4"/><path d="m10.4 9.6 4.6 2.4-4.6 2.4V9.6Z"/>',
+		'x'         => '<path d="m5 5 14 14M19 5 5 19"/>',
+		'linkedin'  => '<rect x="4.4" y="4.4" width="15.2" height="15.2" rx="2.4"/><path d="M8.2 10.6v6M8.2 8.1v.1M12 16.6v-3.4a1.9 1.9 0 0 1 3.8 0v3.4M12 16.6v-6"/>',
+		'pinterest' => '<circle cx="12" cy="12" r="7.6"/><path d="M10.2 19.2 12 12.4M9.8 11.2c0-1.6 1.2-2.8 2.7-2.8s2.5 1 2.5 2.5c0 1.9-1 3.2-2.4 3.2-.7 0-1.3-.5-1.1-1.2"/>',
+		'whatsapp'  => '<path d="M20 12a8 8 0 1 1-3.4-6.5L20 4l-1.4 3.4A7.9 7.9 0 0 1 20 12Z"/><path d="M9.4 9.6c0 3 2 5 5 5 .9 0 1.2-.6 1-1.1l-1.3-.7-.9.8c-1-.4-1.7-1.1-2.1-2.1l.8-.9-.7-1.3c-.5-.2-1.1.1-1.1 1Z"/>',
 	);
 
 	if ( ! isset( $icons[ $name ] ) ) {
@@ -218,4 +226,69 @@ function vv_page_hero( $title, $subtitle = '' ) {
 		</div>
 	</header>
 	<?php
+}
+
+/**
+ * Footer link list — the assigned menu if there is one, otherwise a sensible
+ * default so a fresh install still matches the design.
+ *
+ * @param string $location Registered nav-menu location.
+ * @param array  $fallback label => url.
+ */
+function vv_footer_menu( $location, $fallback = array() ) {
+	if ( has_nav_menu( $location ) ) {
+		wp_nav_menu(
+			array(
+				'theme_location' => $location,
+				'container'      => false,
+				'menu_class'     => 'vv-footer__list',
+				'depth'          => 1,
+				'fallback_cb'    => false,
+			)
+		);
+		return;
+	}
+
+	if ( ! $fallback ) {
+		return;
+	}
+
+	echo '<ul class="vv-footer__list">';
+	foreach ( $fallback as $label => $url ) {
+		printf( '<li><a href="%s">%s</a></li>', esc_url( $url ), esc_html( $label ) );
+	}
+	echo '</ul>';
+}
+
+/**
+ * Social profiles set in the Customizer, in display order.
+ *
+ * @return array of [ icon, label, url ]
+ */
+function vv_social_links() {
+	$networks = array(
+		'facebook'  => __( 'Facebook', 'vastra-veda' ),
+		'instagram' => __( 'Instagram', 'vastra-veda' ),
+		'youtube'   => __( 'YouTube', 'vastra-veda' ),
+		'x'         => __( 'X', 'vastra-veda' ),
+		'pinterest' => __( 'Pinterest', 'vastra-veda' ),
+		'whatsapp'  => __( 'WhatsApp', 'vastra-veda' ),
+	);
+
+	$defaults = array( 'facebook', 'instagram', 'youtube', 'x' );
+	$out      = array();
+
+	foreach ( $networks as $key => $label ) {
+		$url = get_theme_mod( 'vv_social_' . $key, in_array( $key, $defaults, true ) ? '#' : '' );
+		if ( ! $url ) {
+			continue;
+		}
+		$out[] = array(
+			'icon'  => $key,
+			'label' => $label,
+			'url'   => $url,
+		);
+	}
+
+	return $out;
 }
