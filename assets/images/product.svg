@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="1067" viewBox="0 0 800 1067" role="presentation">
+<defs>
+<linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+<stop offset="0" stop-color="#EDE7E1"/><stop offset=".55" stop-color="#D6CBC1"/><stop offset="1" stop-color="#B9ABA0"/>
+</linearGradient>
+<radialGradient id="r" cx=".62" cy=".3" r=".75">
+<stop offset="0" stop-color="#FAF5F0" stop-opacity=".30"/>
+<stop offset="1" stop-color="#FAF5F0" stop-opacity="0"/>
+</radialGradient>
+<linearGradient id="s" x1="0" y1="0" x2="0" y2="1">
+<stop offset="0" stop-color="#000" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity=".16"/>
+</linearGradient>
+</defs>
+<rect width="800" height="1067" fill="url(#g)"/>
+<rect width="800" height="1067" fill="url(#r)"/>
+<g fill="none" stroke="#FAF5F0" stroke-opacity=".30" stroke-width="1">
+<path d="M-80 128 C 224 21, 496 320, 880 107"/><path d="M-80 245 C 224 139, 496 437, 880 224"/><path d="M-80 363 C 224 256, 496 555, 880 341"/><path d="M-80 480 C 224 373, 496 672, 880 459"/><path d="M-80 598 C 224 491, 496 790, 880 576"/><path d="M-80 715 C 224 608, 496 907, 880 694"/><path d="M-80 832 C 224 726, 496 1024, 880 811"/>
+</g>
+<rect width="800" height="1067" fill="url(#s)"/>
+
+</svg>

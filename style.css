@@ -1,0 +1,23 @@
+/*
+Theme Name:   Vastra Veda
+Theme URI:    https://cygnotech.com/themes/vastra-veda
+Author:       Cygnotech Labs
+Author URI:   https://cygnotech.com
+Description:  A luxury saree & ethnic-wear WooCommerce theme. Full-screen editorial intro slider, pinned horizontal category carousel, and an editorial split promo — built from scratch, no page builder required.
+Version:      1.0.0
+Requires at least: 6.2
+Tested up to: 6.6
+Requires PHP: 7.4
+License:      GNU General Public License v2 or later
+License URI:  http://www.gnu.org/licenses/gpl-2.0.html
+Text Domain:  vastra-veda
+Tags:         e-commerce, two-columns, custom-menu, custom-logo, featured-images, full-width-template, translation-ready
+WC requires at least: 7.0
+WC tested up to: 9.1
+*/
+
+/*
+ * All theme styles live in assets/css/theme.css and assets/css/woocommerce.css
+ * so they can be cached and versioned independently.
+ * This file exists for the WordPress theme header above.
+ */

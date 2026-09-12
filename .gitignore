@@ -1,0 +1,23 @@
+# OS noise
+.DS_Store
+Thumbs.db
+._*
+
+# Editors
+.idea/
+.vscode/
+*.sublime-*
+
+# Never commit WordPress core, uploads or config — only this theme lives here
+wp-config.php
+wp-content/
+uploads/
+
+# Build / dependency artefacts
+node_modules/
+vendor/
+*.log
+*.map
+
+# Local-only notes
+/notes/
