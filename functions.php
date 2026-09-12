@@ -158,6 +158,7 @@ add_filter( 'body_class', 'vv_body_classes' );
  * ---------------------------------------------------------------------- */
 
 require VV_DIR . '/inc/template-tags.php';
+require VV_DIR . '/inc/class-vv-drawer-walker.php';
 require VV_DIR . '/inc/customizer.php';
 require VV_DIR . '/inc/woocommerce.php';
 

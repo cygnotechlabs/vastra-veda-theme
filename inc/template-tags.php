@@ -292,3 +292,75 @@ function vv_social_links() {
 
 	return $out;
 }
+
+/* -------------------------------------------------------------------------
+ * Slide-out drawer helpers
+ * ---------------------------------------------------------------------- */
+
+/**
+ * 1 => I, 4 => IV, 9 => IX …  (menus never get near the upper bound)
+ */
+function vv_roman( $number ) {
+	$number = (int) $number;
+	if ( $number < 1 || $number > 3999 ) {
+		return (string) $number;
+	}
+
+	$map = array(
+		'M' => 1000, 'CM' => 900, 'D' => 500, 'CD' => 400,
+		'C' => 100,  'XC' => 90,  'L' => 50,  'XL' => 40,
+		'X' => 10,   'IX' => 9,   'V' => 5,   'IV' => 4,
+		'I' => 1,
+	);
+
+	$out = '';
+	foreach ( $map as $glyph => $value ) {
+		while ( $number >= $value ) {
+			$out    .= $glyph;
+			$number -= $value;
+		}
+	}
+
+	return $out;
+}
+
+/**
+ * Wishlist size. No wishlist ships with the theme — a plugin (or your own
+ * code) can hook this filter to supply the real number.
+ */
+function vv_wishlist_count() {
+	return (int) apply_filters( 'vv_wishlist_count', 0 );
+}
+
+function vv_is_cart_url( $url ) {
+	if ( ! $url || ! vv_is_woocommerce_active() ) {
+		return false;
+	}
+	return untrailingslashit( $url ) === untrailingslashit( wc_get_cart_url() );
+}
+
+function vv_is_wishlist_url( $url ) {
+	if ( ! $url ) {
+		return false;
+	}
+	return (bool) preg_match( '#/wishlist/?($|\?)#i', $url );
+}
+
+/**
+ * Drawer items used when no menu is assigned to the "Slide-out menu" location,
+ * so a fresh install already matches the design.
+ *
+ * @return array of [ label, url, count|null ]
+ */
+function vv_drawer_fallback_items() {
+	$account  = vv_is_woocommerce_active() ? wc_get_page_permalink( 'myaccount' ) : home_url( '/my-account/' );
+	$cart     = vv_is_woocommerce_active() ? wc_get_cart_url() : home_url( '/cart/' );
+
+	return array(
+		array( 'label' => __( 'Profile', 'vastra-veda' ),     'url' => $account,                      'count' => null ),
+		array( 'label' => __( 'Wishlist', 'vastra-veda' ),    'url' => home_url( '/wishlist/' ),      'count' => vv_wishlist_count() ),
+		array( 'label' => __( 'Cart', 'vastra-veda' ),        'url' => $cart,                         'count' => vv_cart_count() ),
+		array( 'label' => __( 'Our Story', 'vastra-veda' ),   'url' => home_url( '/our-story/' ),     'count' => null ),
+		array( 'label' => __( 'Contact Us', 'vastra-veda' ),  'url' => home_url( '/contact-us/' ),    'count' => null ),
+	);
+}
