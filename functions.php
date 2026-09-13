@@ -183,6 +183,7 @@ require VV_DIR . '/inc/customizer.php';
 require VV_DIR . '/inc/woocommerce.php';
 require VV_DIR . '/inc/wishlist.php';
 require VV_DIR . '/inc/contact.php';
+require VV_DIR . '/inc/setup-pages.php';
 
 /* -------------------------------------------------------------------------
  * 4. Widgets
