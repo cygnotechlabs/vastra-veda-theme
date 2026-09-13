@@ -318,3 +318,40 @@ function vv_scaffold_done_notice() {
 	<?php
 }
 add_action( 'admin_notices', 'vv_scaffold_done_notice' );
+
+/* -------------------------------------------------------------------------
+ * Safety net: match a page to its template by slug.
+ *
+ * Creating "Our Story" by hand and forgetting the Template dropdown leaves the
+ * page on page.php, which looks like the theme never deployed. If a page uses
+ * the default template but its slug is one this theme has a template for, use
+ * that template. An explicit choice in the editor always wins.
+ * ---------------------------------------------------------------------- */
+
+function vv_template_by_slug( $template ) {
+	if ( ! is_page() ) {
+		return $template;
+	}
+
+	$chosen = get_page_template_slug( get_queried_object_id() );
+	if ( $chosen ) {
+		return $template; /* the editor made a deliberate choice */
+	}
+
+	$map = apply_filters( 'vv_slug_templates', array(
+		'our-story'  => 'template-our-story.php',
+		'about-us'   => 'template-our-story.php',
+		'contact-us' => 'template-contact.php',
+		'contact'    => 'template-contact.php',
+		'wishlist'   => 'template-wishlist.php',
+	) );
+
+	$slug = get_post_field( 'post_name', get_queried_object_id() );
+
+	if ( isset( $map[ $slug ] ) && file_exists( VV_DIR . '/' . $map[ $slug ] ) ) {
+		return VV_DIR . '/' . $map[ $slug ];
+	}
+
+	return $template;
+}
+add_filter( 'template_include', 'vv_template_by_slug', 20 );

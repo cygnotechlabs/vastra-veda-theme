@@ -37,14 +37,16 @@ while ( have_posts() ) :
 		</section>
 	<?php endif; ?>
 
-	<section class="vv-section vv-story-body">
-		<div class="vv-shell vv-shell--narrow vv-prose">
-			<?php
-			the_content();
-			wp_link_pages( array( 'before' => '<div class="vv-linkpages">', 'after' => '</div>' ) );
-			?>
-		</div>
-	</section>
+	<?php if ( trim( wp_strip_all_tags( get_the_content() ) ) ) : ?>
+		<section class="vv-section vv-story-body">
+			<div class="vv-shell vv-shell--narrow vv-prose">
+				<?php
+				the_content();
+				wp_link_pages( array( 'before' => '<div class="vv-linkpages">', 'after' => '</div>' ) );
+				?>
+			</div>
+		</section>
+	<?php endif; ?>
 
 	<?php
 	$vv_pillars = array();
