@@ -38,8 +38,14 @@ if ( $vv_q->have_posts() ) {
 		);
 	}
 	wp_reset_postdata();
-} else {
-	$vv_cards = array(
+}
+
+/**
+ * Top up to three with demo cards. One or two real posts would otherwise
+ * leave a lopsided row — the section is a three-up by design.
+ */
+if ( count( $vv_cards ) < 3 ) {
+	$vv_demo = array(
 		array(
 			'image'   => vv_placeholder_url( 'post-1', 'promo' ),
 			'eyebrow' => __( 'Pairing Guide', 'vastra-veda' ),
@@ -65,6 +71,8 @@ if ( $vv_q->have_posts() ) {
 			'minutes' => 4,
 		),
 	);
+
+	$vv_cards = array_slice( array_merge( $vv_cards, array_slice( $vv_demo, count( $vv_cards ) ) ), 0, 3 );
 }
 
 $vv_all_url = get_theme_mod( 'vv_editorial_link_url' );
