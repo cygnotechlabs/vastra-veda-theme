@@ -340,13 +340,21 @@ function vv_template_by_slug( $template ) {
 
 	$map = apply_filters( 'vv_slug_templates', array(
 		'our-story'  => 'template-our-story.php',
+		'our-stories'=> 'template-our-story.php',
+		'about'      => 'template-our-story.php',
 		'about-us'   => 'template-our-story.php',
-		'contact-us' => 'template-contact.php',
 		'contact'    => 'template-contact.php',
+		'contact-us' => 'template-contact.php',
+		'contactus'  => 'template-contact.php',
+		'get-in-touch' => 'template-contact.php',
 		'wishlist'   => 'template-wishlist.php',
+		'favourites' => 'template-wishlist.php',
 	) );
 
-	$slug = get_post_field( 'post_name', get_queried_object_id() );
+	/* Normalise so contact_us, Contact-Us and contact%20us all land. */
+	$slug = strtolower( (string) get_post_field( 'post_name', get_queried_object_id() ) );
+	$slug = str_replace( array( '_', '%20', ' ' ), '-', $slug );
+	$slug = trim( preg_replace( '/-+/', '-', $slug ), '-' );
 
 	if ( isset( $map[ $slug ] ) && file_exists( VV_DIR . '/' . $map[ $slug ] ) ) {
 		return VV_DIR . '/' . $map[ $slug ];

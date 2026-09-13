@@ -659,6 +659,64 @@ function vv_customize_register( $wp_customize ) {
 		) );
 	}
 
+	/* Three routing cards */
+	for ( $vv_i = 1; $vv_i <= 3; $vv_i++ ) {
+		$wp_customize->add_setting( "vv_contact_r{$vv_i}_title", array( 'sanitize_callback' => 'sanitize_text_field' ) );
+		$wp_customize->add_control( "vv_contact_r{$vv_i}_title", array(
+			/* translators: %d: card number */
+			'label'       => sprintf( __( 'Card %d — heading', 'vastra-veda' ), $vv_i ),
+			'description' => 1 === $vv_i ? __( 'PLACEHOLDER cards with example@ addresses — replace them or empty a card to hide it.', 'vastra-veda' ) : '',
+			'section'     => 'vv_contact',
+			'type'        => 'text',
+		) );
+
+		$wp_customize->add_setting( "vv_contact_r{$vv_i}_text", array( 'sanitize_callback' => 'sanitize_textarea_field' ) );
+		$wp_customize->add_control( "vv_contact_r{$vv_i}_text", array(
+			/* translators: %d: card number */
+			'label'   => sprintf( __( 'Card %d — text', 'vastra-veda' ), $vv_i ),
+			'section' => 'vv_contact',
+			'type'    => 'textarea',
+		) );
+
+		$wp_customize->add_setting( "vv_contact_r{$vv_i}_email", array( 'sanitize_callback' => 'sanitize_text_field' ) );
+		$wp_customize->add_control( "vv_contact_r{$vv_i}_email", array(
+			/* translators: %d: card number */
+			'label'   => sprintf( __( 'Card %d — email', 'vastra-veda' ), $vv_i ),
+			'section' => 'vv_contact',
+			'type'    => 'text',
+		) );
+	}
+
+	/* FAQ accordion */
+	$wp_customize->add_setting( 'vv_contact_faq_heading', array(
+		'default'           => 'BEFORE YOU *write*',
+		'sanitize_callback' => 'wp_kses_post',
+	) );
+	$wp_customize->add_control( 'vv_contact_faq_heading', array(
+		'label'   => __( 'FAQ heading', 'vastra-veda' ),
+		'section' => 'vv_contact',
+		'type'    => 'text',
+	) );
+
+	for ( $vv_i = 1; $vv_i <= 4; $vv_i++ ) {
+		$wp_customize->add_setting( "vv_contact_q{$vv_i}", array( 'sanitize_callback' => 'sanitize_text_field' ) );
+		$wp_customize->add_control( "vv_contact_q{$vv_i}", array(
+			/* translators: %d: question number */
+			'label'       => sprintf( __( 'Question %d', 'vastra-veda' ), $vv_i ),
+			'description' => 1 === $vv_i ? __( 'PLACEHOLDER answers describing delivery times and a returns window — these are promises to customers. Replace them with your real policy or empty a pair to hide it.', 'vastra-veda' ) : '',
+			'section'     => 'vv_contact',
+			'type'        => 'text',
+		) );
+
+		$wp_customize->add_setting( "vv_contact_a{$vv_i}", array( 'sanitize_callback' => 'sanitize_textarea_field' ) );
+		$wp_customize->add_control( "vv_contact_a{$vv_i}", array(
+			/* translators: %d: question number */
+			'label'   => sprintf( __( 'Answer %d', 'vastra-veda' ), $vv_i ),
+			'section' => 'vv_contact',
+			'type'    => 'textarea',
+		) );
+	}
+
 	$wp_customize->add_setting( 'vv_contact_map', array( 'sanitize_callback' => 'esc_url_raw' ) );
 	$wp_customize->add_control( 'vv_contact_map', array(
 		'label'       => __( 'Map embed URL', 'vastra-veda' ),

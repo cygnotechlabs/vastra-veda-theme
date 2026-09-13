@@ -30,6 +30,43 @@ $vv_rows = array(
 		</div>
 	</header>
 
+	<?php
+	$vv_routes = array();
+	$vv_route_defaults = array(
+		1 => array( __( 'Orders & delivery', 'vastra-veda' ), __( 'Where is my parcel, can I change an address, can I exchange a size.', 'vastra-veda' ), 'orders@example.com' ),
+		2 => array( __( 'Wholesale & stockists', 'vastra-veda' ), __( 'Bulk enquiries, look books, and terms for boutiques and studios.', 'vastra-veda' ), 'trade@example.com' ),
+		3 => array( __( 'Press & collaboration', 'vastra-veda' ), __( 'Shoots, features, and working together on a collection.', 'vastra-veda' ), 'studio@example.com' ),
+	);
+	for ( $vv_i = 1; $vv_i <= 3; $vv_i++ ) {
+		$vv_t = get_theme_mod( "vv_contact_r{$vv_i}_title", $vv_route_defaults[ $vv_i ][0] );
+		$vv_d = get_theme_mod( "vv_contact_r{$vv_i}_text",  $vv_route_defaults[ $vv_i ][1] );
+		$vv_e = get_theme_mod( "vv_contact_r{$vv_i}_email", $vv_route_defaults[ $vv_i ][2] );
+		if ( $vv_t || $vv_e ) {
+			$vv_routes[] = array( $vv_t, $vv_d, $vv_e );
+		}
+	}
+	?>
+	<?php if ( $vv_routes ) : ?>
+		<section class="vv-routes">
+			<div class="vv-shell vv-routes__grid">
+				<?php foreach ( $vv_routes as $vv_n => $vv_route ) : ?>
+					<div class="vv-route">
+						<span class="vv-route__num"><?php echo esc_html( vv_roman( $vv_n + 1 ) ); ?></span>
+						<h2 class="vv-route__title"><?php echo esc_html( $vv_route[0] ); ?></h2>
+						<?php if ( $vv_route[1] ) : ?>
+							<p class="vv-route__text"><?php echo esc_html( $vv_route[1] ); ?></p>
+						<?php endif; ?>
+						<?php if ( $vv_route[2] ) : ?>
+							<a class="vv-route__mail" href="mailto:<?php echo esc_attr( $vv_route[2] ); ?>">
+								<?php echo esc_html( $vv_route[2] ); ?><?php vv_the_icon( 'arrow', 14 ); ?>
+							</a>
+						<?php endif; ?>
+					</div>
+				<?php endforeach; ?>
+			</div>
+		</section>
+	<?php endif; ?>
+
 	<section class="vv-section vv-contact">
 		<div class="vv-shell vv-contact__grid">
 
@@ -111,6 +148,47 @@ $vv_rows = array(
 				</form>
 			</div>
 		</div>
+
+	<?php
+	$vv_faqs = array();
+	$vv_faq_defaults = array(
+		1 => array( __( 'How long does delivery take?', 'vastra-veda' ), __( 'Within India, three to five working days once the piece has been checked and packed. International orders take seven to twelve, and we send the tracking number the moment it leaves us.', 'vastra-veda' ) ),
+		2 => array( __( 'Can I return or exchange a saree?', 'vastra-veda' ), __( 'Yes, within seven days of delivery, unworn and with the tags on. Handloom pieces carry small irregularities from the loom — those are part of the weave rather than a fault, so they are not grounds for return.', 'vastra-veda' ) ),
+		3 => array( __( 'Do you ship outside India?', 'vastra-veda' ), __( 'We do. Duties and taxes in the destination country are payable by you, and are not included at checkout.', 'vastra-veda' ) ),
+		4 => array( __( 'How should I care for a handloom saree?', 'vastra-veda' ), __( 'Dry clean the first two or three times, then hand wash cold if the weave allows it. Store folded in cotton, never plastic, and refold along a different line every few months so the zari does not crease in one place.', 'vastra-veda' ) ),
+	);
+	for ( $vv_i = 1; $vv_i <= 4; $vv_i++ ) {
+		$vv_q = get_theme_mod( "vv_contact_q{$vv_i}", $vv_faq_defaults[ $vv_i ][0] );
+		$vv_a = get_theme_mod( "vv_contact_a{$vv_i}", $vv_faq_defaults[ $vv_i ][1] );
+		if ( $vv_q && $vv_a ) {
+			$vv_faqs[] = array( $vv_q, $vv_a );
+		}
+	}
+	?>
+	<?php if ( $vv_faqs ) : ?>
+		<div class="vv-shell vv-faq">
+			<div class="vv-faq__head">
+				<h2 class="vv-display vv-faq__title"><?php vv_the_headline( get_theme_mod( 'vv_contact_faq_heading', 'BEFORE YOU *write*' ) ); ?></h2>
+				<?php $vv_faq_page = get_page_by_path( 'faqs' ); ?>
+				<?php if ( $vv_faq_page ) : ?>
+					<a class="vv-section-head__link" href="<?php echo esc_url( get_permalink( $vv_faq_page ) ); ?>">
+						<?php esc_html_e( 'All FAQs', 'vastra-veda' ); ?>
+					</a>
+				<?php endif; ?>
+			</div>
+			<div class="vv-faq__list">
+				<?php foreach ( $vv_faqs as $vv_n => $vv_faq ) : ?>
+					<details class="vv-faq__item"<?php echo 0 === $vv_n ? ' open' : ''; ?>>
+						<summary>
+							<span class="vv-faq__q"><?php echo esc_html( $vv_faq[0] ); ?></span>
+							<span class="vv-faq__sign" aria-hidden="true"></span>
+						</summary>
+						<div class="vv-faq__a"><p><?php echo esc_html( $vv_faq[1] ); ?></p></div>
+					</details>
+				<?php endforeach; ?>
+			</div>
+		</div>
+	<?php endif; ?>
 
 		<?php $vv_map = get_theme_mod( 'vv_contact_map' ); ?>
 		<?php if ( $vv_map ) : ?>
