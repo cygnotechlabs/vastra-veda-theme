@@ -394,6 +394,95 @@
 		} );
 	}
 
+	/* ------------------------------------------------------------ 6 */
+	function initWishlist() {
+		var buttons = Array.prototype.slice.call( document.querySelectorAll( '[data-vv-wish]' ) );
+		if ( ! buttons.length || ! window.vvData || ! window.vvData.ajaxUrl ) {
+			return;
+		}
+
+		function renderCount( n ) {
+			var one  = ( window.vvData.i18n && window.vvData.i18n.itemOne ) || '%s item';
+			var many = ( window.vvData.i18n && window.vvData.i18n.itemMany ) || '%s items';
+			var tpl  = 1 === n ? one : many;
+			Array.prototype.forEach.call( document.querySelectorAll( '[data-vv-wish-count]' ), function ( el ) {
+				el.textContent = tpl.replace( '%s', String( n ) );
+			} );
+		}
+
+		function toggle( btn ) {
+			var id = btn.getAttribute( 'data-vv-wish' );
+			if ( ! id || btn.classList.contains( 'is-busy' ) ) {
+				return;
+			}
+			btn.classList.add( 'is-busy' );
+
+			var body = new URLSearchParams();
+			body.append( 'action', 'vv_wishlist' );
+			body.append( 'product_id', id );
+			body.append( 'nonce', window.vvData.wishNonce || '' );
+
+			window.fetch( window.vvData.ajaxUrl, {
+				method: 'POST',
+				credentials: 'same-origin',
+				headers: { 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8' },
+				body: body.toString()
+			} )
+			.then( function ( r ) { return r.json(); } )
+			.then( function ( res ) {
+				if ( ! res || ! res.success ) {
+					return;
+				}
+				var on = !! res.data.added;
+
+				/* Every button for this product, wherever it is on the page */
+				Array.prototype.forEach.call(
+					document.querySelectorAll( '[data-vv-wish="' + id + '"]' ),
+					function ( b ) {
+						b.classList.toggle( 'is-on', on );
+						b.setAttribute( 'aria-pressed', on ? 'true' : 'false' );
+						var label = b.querySelector( '.vv-wish__label' );
+						if ( label && window.vvData.i18n ) {
+							label.textContent = on ? window.vvData.i18n.saved : window.vvData.i18n.save;
+						}
+					}
+				);
+
+				renderCount( res.data.count );
+
+				/* On the wishlist page itself, drop the card out of the grid */
+				var grid = document.querySelector( '[data-vv-wishgrid]' );
+				if ( grid && ! on ) {
+					var card = btn.closest( 'li.product' );
+					if ( card ) {
+						card.style.transition = 'opacity .3s, transform .3s';
+						card.style.opacity = '0';
+						card.style.transform = 'scale(.97)';
+						window.setTimeout( function () {
+							card.remove();
+							if ( ! grid.querySelector( 'li.product' ) ) {
+								window.location.reload();
+							}
+						}, 320 );
+					}
+				}
+			} )
+			.catch( function () { /* leave the button as it was */ } )
+			.then( function () { btn.classList.remove( 'is-busy' ); } );
+		}
+
+		/* Delegated, so cards added later still work */
+		document.addEventListener( 'click', function ( e ) {
+			var btn = e.target.closest ? e.target.closest( '[data-vv-wish]' ) : null;
+			if ( ! btn ) {
+				return;
+			}
+			e.preventDefault();
+			e.stopPropagation();
+			toggle( btn );
+		} );
+	}
+
 	/* ------------------------------------------------------------ boot */
 	ready( function () {
 		initHeader();
@@ -401,6 +490,7 @@
 		initOverlays();
 		initCategories();
 		initAuth();
+		initWishlist();
 	} );
 
 	/* Keep the floating pill in sync after AJAX add-to-cart. */

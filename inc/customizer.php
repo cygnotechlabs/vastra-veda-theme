@@ -489,6 +489,95 @@ function vv_customize_register( $wp_customize ) {
 		'type'    => 'url',
 	) );
 
+	/* ------------------------------------------------------------------
+	 * Our Story page
+	 * --------------------------------------------------------------- */
+	$wp_customize->add_section( 'vv_story', array(
+		'title'       => __( 'Our Story page', 'vastra-veda' ),
+		'priority'    => 26,
+		'description' => __( 'Used by pages set to the "Our Story" template. The cover comes from the page\'s featured image and the opening line from its excerpt.', 'vastra-veda' ),
+	) );
+
+	$wp_customize->add_setting( 'vv_story_eyebrow', array(
+		'default'           => __( 'Our story', 'vastra-veda' ),
+		'sanitize_callback' => 'sanitize_text_field',
+	) );
+	$wp_customize->add_control( 'vv_story_eyebrow', array(
+		'label' => __( 'Small line above the title', 'vastra-veda' ),
+		'section' => 'vv_story', 'type' => 'text',
+	) );
+
+	for ( $vv_i = 1; $vv_i <= 3; $vv_i++ ) {
+		$wp_customize->add_setting( "vv_story_p{$vv_i}_title", array( 'sanitize_callback' => 'sanitize_text_field' ) );
+		$wp_customize->add_control( "vv_story_p{$vv_i}_title", array(
+			/* translators: %d: pillar number */
+			'label'   => sprintf( __( 'Pillar %d — title', 'vastra-veda' ), $vv_i ),
+			'section' => 'vv_story',
+			'type'    => 'text',
+		) );
+
+		$wp_customize->add_setting( "vv_story_p{$vv_i}_text", array( 'sanitize_callback' => 'wp_kses_post' ) );
+		$wp_customize->add_control( "vv_story_p{$vv_i}_text", array(
+			/* translators: %d: pillar number */
+			'label'   => sprintf( __( 'Pillar %d — text', 'vastra-veda' ), $vv_i ),
+			'section' => 'vv_story',
+			'type'    => 'textarea',
+		) );
+	}
+
+	$wp_customize->add_setting( 'vv_story_cta_heading', array(
+		'default'           => 'FIND THE ONE *that waits* FOR YOU',
+		'sanitize_callback' => 'wp_kses_post',
+	) );
+	$wp_customize->add_control( 'vv_story_cta_heading', array(
+		'label' => __( 'Closing heading', 'vastra-veda' ),
+		'section' => 'vv_story', 'type' => 'text',
+	) );
+
+	$wp_customize->add_setting( 'vv_story_cta_button', array(
+		'default'           => __( 'Shop the collection', 'vastra-veda' ),
+		'sanitize_callback' => 'sanitize_text_field',
+	) );
+	$wp_customize->add_control( 'vv_story_cta_button', array(
+		'label' => __( 'Closing button label', 'vastra-veda' ),
+		'section' => 'vv_story', 'type' => 'text',
+	) );
+
+	/* ------------------------------------------------------------------
+	 * Contact page
+	 * --------------------------------------------------------------- */
+	$wp_customize->add_section( 'vv_contact', array(
+		'title'       => __( 'Contact page', 'vastra-veda' ),
+		'priority'    => 27,
+		'description' => __( 'Used by pages set to the "Contact" template.', 'vastra-veda' ),
+	) );
+
+	$vv_contact_fields = array(
+		'vv_contact_address' => array( __( 'Address', 'vastra-veda' ), "Vastra Veda\nAngamaly, Kerala 683572\nIndia", 'textarea' ),
+		'vv_contact_phone'   => array( __( 'Phone', 'vastra-veda' ), '+91 00000 00000', 'text' ),
+		'vv_contact_email'   => array( __( 'Email — also where the form is sent', 'vastra-veda' ), get_option( 'admin_email' ), 'text' ),
+		'vv_contact_hours'   => array( __( 'Opening hours', 'vastra-veda' ), "Monday to Saturday\n10am – 7pm IST", 'textarea' ),
+	);
+	foreach ( $vv_contact_fields as $vv_key => $vv_meta ) {
+		$wp_customize->add_setting( $vv_key, array(
+			'default'           => $vv_meta[1],
+			'sanitize_callback' => 'textarea' === $vv_meta[2] ? 'sanitize_textarea_field' : 'sanitize_text_field',
+		) );
+		$wp_customize->add_control( $vv_key, array(
+			'label'   => $vv_meta[0],
+			'section' => 'vv_contact',
+			'type'    => $vv_meta[2],
+		) );
+	}
+
+	$wp_customize->add_setting( 'vv_contact_map', array( 'sanitize_callback' => 'esc_url_raw' ) );
+	$wp_customize->add_control( 'vv_contact_map', array(
+		'label'       => __( 'Map embed URL', 'vastra-veda' ),
+		'description' => __( 'Google Maps → Share → Embed a map → copy the src URL. Empty hides the map.', 'vastra-veda' ),
+		'section'     => 'vv_contact',
+		'type'        => 'url',
+	) );
+
 	/* Live-refresh the simple text bits. */
 	$wp_customize->get_setting( 'blogname' )->transport = 'postMessage';
 }

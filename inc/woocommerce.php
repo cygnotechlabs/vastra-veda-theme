@@ -150,6 +150,11 @@ function vv_loop_media() {
 	}
 
 	echo '<span class="vv-card__quick">' . esc_html__( 'View', 'vastra-veda' ) . '</span>';
+
+	if ( function_exists( 'vv_wishlist_button' ) ) {
+		vv_wishlist_button( $product->get_id(), 'icon' );
+	}
+
 	echo '</div>';
 }
 

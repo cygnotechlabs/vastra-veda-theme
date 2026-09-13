@@ -54,7 +54,8 @@ defined( 'ABSPATH' ) || exit;
 
 					if ( null !== $vv_item['count'] ) {
 						printf(
-							'<span class="vv-drawer__meta">%s</span>',
+							'<span class="vv-drawer__meta" data-vv-%1$s-count>%2$s</span>',
+							esc_attr( isset( $vv_item['kind'] ) && $vv_item['kind'] ? $vv_item['kind'] : 'cart' ),
 							esc_html(
 								sprintf(
 									/* translators: %s: number of items */

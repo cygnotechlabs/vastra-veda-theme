@@ -34,10 +34,13 @@ class VV_Drawer_Walker extends Walker_Nav_Menu {
 		$url     = ! empty( $item->url ) ? $item->url : '';
 
 		$count = null;
+		$kind  = '';
 		if ( in_array( 'vv-count-cart', $classes, true ) || vv_is_cart_url( $url ) ) {
 			$count = vv_cart_count();
+			$kind  = 'cart';
 		} elseif ( in_array( 'vv-count-wishlist', $classes, true ) || vv_is_wishlist_url( $url ) ) {
 			$count = vv_wishlist_count();
+			$kind  = 'wish';
 		}
 
 		if ( 0 === $depth ) {
@@ -66,7 +69,7 @@ class VV_Drawer_Walker extends Walker_Nav_Menu {
 		$output .= '<span class="vv-drawer__label">' . esc_html( $item->title ) . '</span>';
 
 		if ( null !== $count ) {
-			$output .= '<span class="vv-drawer__meta">' . esc_html(
+			$output .= '<span class="vv-drawer__meta" data-vv-' . esc_attr( $kind ) . '-count>' . esc_html(
 				sprintf(
 					/* translators: %s: number of items */
 					_n( '%s item', '%s items', (int) $count, 'vastra-veda' ),

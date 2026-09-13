@@ -368,13 +368,13 @@ function vv_drawer_fallback_items() {
 	$shop = vv_is_woocommerce_active() ? wc_get_page_permalink( 'shop' ) : home_url( '/shop/' );
 
 	return array(
-		array( 'label' => __( 'Sarees', 'vastra-veda' ),       'url' => $shop,                      'count' => null ),
-		array( 'label' => __( 'New Arrivals', 'vastra-veda' ), 'url' => add_query_arg( 'orderby', 'date', $shop ), 'count' => null ),
-		array( 'label' => __( 'Profile', 'vastra-veda' ),      'url' => $account,                   'count' => null ),
-		array( 'label' => __( 'Wishlist', 'vastra-veda' ),     'url' => home_url( '/wishlist/' ),   'count' => vv_wishlist_count() ),
-		array( 'label' => __( 'Cart', 'vastra-veda' ),         'url' => $cart,                      'count' => vv_cart_count() ),
-		array( 'label' => __( 'Our Story', 'vastra-veda' ),    'url' => home_url( '/our-story/' ),  'count' => null ),
-		array( 'label' => __( 'Contact Us', 'vastra-veda' ),   'url' => home_url( '/contact-us/' ), 'count' => null ),
+		array( 'label' => __( 'Sarees', 'vastra-veda' ),       'url' => $shop,                      'count' => null, 'kind' => '' ),
+		array( 'label' => __( 'New Arrivals', 'vastra-veda' ), 'url' => add_query_arg( 'orderby', 'date', $shop ), 'count' => null, 'kind' => '' ),
+		array( 'label' => __( 'Profile', 'vastra-veda' ),      'url' => $account,                   'count' => null, 'kind' => '' ),
+		array( 'label' => __( 'Wishlist', 'vastra-veda' ),     'url' => function_exists( 'vv_wishlist_page_url' ) ? vv_wishlist_page_url() : home_url( '/wishlist/' ), 'count' => vv_wishlist_count(), 'kind' => 'wish' ),
+		array( 'label' => __( 'Cart', 'vastra-veda' ),         'url' => $cart,                      'count' => vv_cart_count(), 'kind' => 'cart' ),
+		array( 'label' => __( 'Our Story', 'vastra-veda' ),    'url' => home_url( '/our-story/' ),  'count' => null, 'kind' => '' ),
+		array( 'label' => __( 'Contact Us', 'vastra-veda' ),   'url' => home_url( '/contact-us/' ), 'count' => null, 'kind' => '' ),
 	);
 }
 

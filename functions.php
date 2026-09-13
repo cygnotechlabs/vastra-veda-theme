@@ -123,9 +123,14 @@ function vv_assets() {
 		array(
 			'ajaxUrl'      => admin_url( 'admin-ajax.php' ),
 			'sliderDelay'  => (int) get_theme_mod( 'vv_hero_autoplay', 6000 ),
+			'wishNonce'    => wp_create_nonce( 'vv-wishlist' ),
 			'i18n'         => array(
 				'closeMenu'   => __( 'Close menu', 'vastra-veda' ),
 				'closeSearch' => __( 'Close search', 'vastra-veda' ),
+				'saved'       => __( 'Saved', 'vastra-veda' ),
+				'save'        => __( 'Add to wishlist', 'vastra-veda' ),
+				'itemOne'     => __( '%s item', 'vastra-veda' ),
+				'itemMany'    => __( '%s items', 'vastra-veda' ),
 			),
 		)
 	);
@@ -161,6 +166,8 @@ require VV_DIR . '/inc/template-tags.php';
 require VV_DIR . '/inc/class-vv-drawer-walker.php';
 require VV_DIR . '/inc/customizer.php';
 require VV_DIR . '/inc/woocommerce.php';
+require VV_DIR . '/inc/wishlist.php';
+require VV_DIR . '/inc/contact.php';
 
 /* -------------------------------------------------------------------------
  * 4. Widgets
