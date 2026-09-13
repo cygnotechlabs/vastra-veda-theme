@@ -101,7 +101,9 @@ function vv_hero_defaults() {
 	return array(
 		1 => "TRADITION *and*\nMODERN GRACE\n*in* EVERY DRAPE",
 		2 => "WOVEN *by* HAND\nWORN *with*\nINTENTION",
-		3 => "HEIRLOOM *silks*\nFOR EVERY\nNEW *beginning*",
+		/* Slide 3 is off until a third photograph exists — set a headline in
+		   Customize → 1 · Intro slider to switch it on. */
+		3 => "",
 	);
 }
 
