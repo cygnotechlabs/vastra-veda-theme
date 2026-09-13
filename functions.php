@@ -103,20 +103,35 @@ function vv_google_fonts_url() {
 	return apply_filters( 'vv_fonts_url', $url );
 }
 
+/**
+ * Version a stylesheet or script by its own modification time.
+ *
+ * A hardcoded version means browsers and edge caches keep serving the old file
+ * after a deploy — the markup updates, the CSS does not, and the site looks
+ * half-broken. Keyed to filemtime, every deploy invalidates itself.
+ *
+ * @param string $rel Path relative to the theme root, e.g. '/assets/css/theme.css'.
+ */
+function vv_asset_version( $rel ) {
+	$path = VV_DIR . $rel;
+
+	return file_exists( $path ) ? (string) filemtime( $path ) : VV_VERSION;
+}
+
 function vv_assets() {
 	$fonts = vv_google_fonts_url();
 	if ( $fonts ) {
 		wp_enqueue_style( 'vv-fonts', $fonts, array(), null );
 	}
 
-	wp_enqueue_style( 'vastra-veda', get_stylesheet_uri(), array(), VV_VERSION );
-	wp_enqueue_style( 'vv-theme', VV_URI . '/assets/css/theme.css', array( 'vastra-veda' ), VV_VERSION );
+	wp_enqueue_style( 'vastra-veda', get_stylesheet_uri(), array(), vv_asset_version( '/style.css' ) );
+	wp_enqueue_style( 'vv-theme', VV_URI . '/assets/css/theme.css', array( 'vastra-veda' ), vv_asset_version( '/assets/css/theme.css' ) );
 
 	if ( vv_is_woocommerce_active() ) {
-		wp_enqueue_style( 'vv-woocommerce', VV_URI . '/assets/css/woocommerce.css', array( 'vv-theme' ), VV_VERSION );
+		wp_enqueue_style( 'vv-woocommerce', VV_URI . '/assets/css/woocommerce.css', array( 'vv-theme' ), vv_asset_version( '/assets/css/woocommerce.css' ) );
 	}
 
-	wp_enqueue_script( 'vv-theme', VV_URI . '/assets/js/theme.js', array(), VV_VERSION, true );
+	wp_enqueue_script( 'vv-theme', VV_URI . '/assets/js/theme.js', array(), vv_asset_version( '/assets/js/theme.js' ), true );
 	wp_localize_script(
 		'vv-theme',
 		'vvData',
