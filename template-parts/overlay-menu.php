@@ -58,7 +58,7 @@ defined( 'ABSPATH' ) || exit;
 							esc_html(
 								sprintf(
 									/* translators: %s: number of items */
-									_n( '%s Item', '%s Items', (int) $vv_item['count'], 'vastra-veda' ),
+									_n( '%s item', '%s items', (int) $vv_item['count'], 'vastra-veda' ),
 									number_format_i18n( (int) $vv_item['count'] )
 								)
 							)
@@ -71,6 +71,13 @@ defined( 'ABSPATH' ) || exit;
 			}
 			?>
 		</nav>
+
+		<?php
+		$vv_drawer_note = get_theme_mod( 'vv_drawer_note', __( 'Handloomed with care · Since heritage', 'vastra-veda' ) );
+		if ( $vv_drawer_note ) :
+			?>
+			<p class="vv-drawer__note"><?php echo esc_html( $vv_drawer_note ); ?></p>
+		<?php endif; ?>
 
 	</div>
 </div>

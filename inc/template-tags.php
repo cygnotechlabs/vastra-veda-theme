@@ -116,16 +116,17 @@ function vv_hero_defaults() {
  *
  * @param string $slug One of: hero-1, hero-2, hero-3, cat-1..cat-6, promo, product.
  */
-function vv_placeholder_url( $slug ) {
-	$slug = sanitize_file_name( $slug );
-
-	foreach ( array( 'jpg', 'jpeg', 'png', 'webp', 'avif', 'svg' ) as $ext ) {
-		if ( file_exists( VV_DIR . '/assets/images/' . $slug . '.' . $ext ) ) {
-			return VV_URI . '/assets/images/' . $slug . '.' . $ext;
+function vv_placeholder_url( $slug, $fallback = '' ) {
+	foreach ( array_filter( array( $slug, $fallback ) ) as $candidate ) {
+		$candidate = sanitize_file_name( $candidate );
+		foreach ( array( 'jpg', 'jpeg', 'png', 'webp', 'avif', 'svg' ) as $ext ) {
+			if ( file_exists( VV_DIR . '/assets/images/' . $candidate . '.' . $ext ) ) {
+				return VV_URI . '/assets/images/' . $candidate . '.' . $ext;
+			}
 		}
 	}
 
-	return VV_URI . '/assets/images/' . $slug . '.svg';
+	return VV_URI . '/assets/images/' . sanitize_file_name( $slug ) . '.svg';
 }
 
 /**
@@ -135,7 +136,7 @@ function vv_placeholder_url( $slug ) {
  * @param string $fallback Placeholder slug.
  * @param string $size     Registered image size.
  */
-function vv_image_url( $mod, $fallback, $size = 'vv-hero' ) {
+function vv_image_url( $mod, $fallback, $size = 'vv-hero', $fallback_alt = '' ) {
 	$value = get_theme_mod( $mod );
 
 	if ( is_numeric( $value ) ) {
@@ -148,7 +149,7 @@ function vv_image_url( $mod, $fallback, $size = 'vv-hero' ) {
 		return $value;
 	}
 
-	return vv_placeholder_url( $fallback );
+	return vv_placeholder_url( $fallback, $fallback_alt );
 }
 
 /**
@@ -358,11 +359,36 @@ function vv_drawer_fallback_items() {
 	$account  = vv_is_woocommerce_active() ? wc_get_page_permalink( 'myaccount' ) : home_url( '/my-account/' );
 	$cart     = vv_is_woocommerce_active() ? wc_get_cart_url() : home_url( '/cart/' );
 
+	$shop = vv_is_woocommerce_active() ? wc_get_page_permalink( 'shop' ) : home_url( '/shop/' );
+
 	return array(
-		array( 'label' => __( 'Profile', 'vastra-veda' ),     'url' => $account,                      'count' => null ),
-		array( 'label' => __( 'Wishlist', 'vastra-veda' ),    'url' => home_url( '/wishlist/' ),      'count' => vv_wishlist_count() ),
-		array( 'label' => __( 'Cart', 'vastra-veda' ),        'url' => $cart,                         'count' => vv_cart_count() ),
-		array( 'label' => __( 'Our Story', 'vastra-veda' ),   'url' => home_url( '/our-story/' ),     'count' => null ),
-		array( 'label' => __( 'Contact Us', 'vastra-veda' ),  'url' => home_url( '/contact-us/' ),    'count' => null ),
+		array( 'label' => __( 'Sarees', 'vastra-veda' ),       'url' => $shop,                      'count' => null ),
+		array( 'label' => __( 'New Arrivals', 'vastra-veda' ), 'url' => add_query_arg( 'orderby', 'date', $shop ), 'count' => null ),
+		array( 'label' => __( 'Profile', 'vastra-veda' ),      'url' => $account,                   'count' => null ),
+		array( 'label' => __( 'Wishlist', 'vastra-veda' ),     'url' => home_url( '/wishlist/' ),   'count' => vv_wishlist_count() ),
+		array( 'label' => __( 'Cart', 'vastra-veda' ),         'url' => $cart,                      'count' => vv_cart_count() ),
+		array( 'label' => __( 'Our Story', 'vastra-veda' ),    'url' => home_url( '/our-story/' ),  'count' => null ),
+		array( 'label' => __( 'Contact Us', 'vastra-veda' ),   'url' => home_url( '/contact-us/' ), 'count' => null ),
 	);
+}
+
+/**
+ * Estimated reading time for a post, in whole minutes (min 1).
+ */
+function vv_reading_time( $post_id = null ) {
+	$content = get_post_field( 'post_content', $post_id ? $post_id : get_the_ID() );
+	$words   = str_word_count( wp_strip_all_tags( (string) $content ) );
+
+	return max( 1, (int) round( $words / 200 ) );
+}
+
+/**
+ * A post's first category name, for the card eyebrow.
+ */
+function vv_post_eyebrow( $post_id = null ) {
+	$terms = get_the_category( $post_id ? $post_id : get_the_ID() );
+	if ( $terms && ! is_wp_error( $terms ) ) {
+		return $terms[0]->name;
+	}
+	return __( 'Journal', 'vastra-veda' );
 }

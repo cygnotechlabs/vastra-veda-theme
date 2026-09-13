@@ -187,14 +187,136 @@ function vv_customize_register( $wp_customize ) {
 	);
 
 	/* ------------------------------------------------------------------
+	 * 4. From our stories
+	 * --------------------------------------------------------------- */
+	$wp_customize->add_section( 'vv_stories', array(
+		'title'       => __( '4 · From our stories', 'vastra-veda' ),
+		'panel'       => 'vv_home',
+		'description' => __( 'Six-tile mosaic. Tiles 1 and 4 are the tall ones and carry the play button.', 'vastra-veda' ),
+	) );
+
+	$wp_customize->add_setting( 'vv_stories_on', array( 'default' => true, 'sanitize_callback' => 'vv_sanitize_checkbox' ) );
+	$wp_customize->add_control( 'vv_stories_on', array(
+		'label'   => __( 'Show this section', 'vastra-veda' ),
+		'section' => 'vv_stories',
+		'type'    => 'checkbox',
+	) );
+
+	$wp_customize->add_setting( 'vv_stories_heading', array(
+		'default'           => 'FROM OUR *stories*',
+		'sanitize_callback' => 'wp_kses_post',
+	) );
+	$wp_customize->add_control( 'vv_stories_heading', array(
+		'label'   => __( 'Heading', 'vastra-veda' ),
+		'section' => 'vv_stories',
+		'type'    => 'text',
+	) );
+
+	$wp_customize->add_setting( 'vv_stories_intro', array(
+		'default'           => __( 'Discover sarees, styling moments, and the latest from Vastra Veda on Instagram.', 'vastra-veda' ),
+		'sanitize_callback' => 'wp_kses_post',
+	) );
+	$wp_customize->add_control( 'vv_stories_intro', array(
+		'label'   => __( 'Intro paragraph', 'vastra-veda' ),
+		'section' => 'vv_stories',
+		'type'    => 'textarea',
+	) );
+
+	$wp_customize->add_setting( 'vv_stories_link_text', array(
+		'default'           => __( 'Follow Us', 'vastra-veda' ),
+		'sanitize_callback' => 'sanitize_text_field',
+	) );
+	$wp_customize->add_control( 'vv_stories_link_text', array(
+		'label'   => __( 'Link label', 'vastra-veda' ),
+		'section' => 'vv_stories',
+		'type'    => 'text',
+	) );
+
+	$wp_customize->add_setting( 'vv_stories_link_url', array( 'sanitize_callback' => 'esc_url_raw' ) );
+	$wp_customize->add_control( 'vv_stories_link_url', array(
+		'label'       => __( 'Instagram profile URL', 'vastra-veda' ),
+		'description' => __( 'Used for the link and for any tile without its own URL.', 'vastra-veda' ),
+		'section'     => 'vv_stories',
+		'type'        => 'url',
+	) );
+
+	for ( $vv_i = 1; $vv_i <= 6; $vv_i++ ) {
+		$wp_customize->add_setting( "vv_stories_{$vv_i}_image", array( 'sanitize_callback' => 'absint' ) );
+		$wp_customize->add_control(
+			new WP_Customize_Media_Control(
+				$wp_customize,
+				"vv_stories_{$vv_i}_image",
+				array(
+					/* translators: %d: tile number */
+					'label'     => sprintf( __( 'Tile %d — image', 'vastra-veda' ), $vv_i ),
+					'section'   => 'vv_stories',
+					'mime_type' => 'image',
+				)
+			)
+		);
+
+		$wp_customize->add_setting( "vv_stories_{$vv_i}_link", array( 'sanitize_callback' => 'esc_url_raw' ) );
+		$wp_customize->add_control( "vv_stories_{$vv_i}_link", array(
+			/* translators: %d: tile number */
+			'label'   => sprintf( __( 'Tile %d — link', 'vastra-veda' ), $vv_i ),
+			'section' => 'vv_stories',
+			'type'    => 'url',
+		) );
+	}
+
+	/* ------------------------------------------------------------------
+	 * 5. Editorial cards
+	 * --------------------------------------------------------------- */
+	$wp_customize->add_section( 'vv_editorial', array(
+		'title'       => __( '5 · Editorial cards', 'vastra-veda' ),
+		'panel'       => 'vv_home',
+		'description' => __( 'Shows your three most recent blog posts. Demo cards appear until you publish one.', 'vastra-veda' ),
+	) );
+
+	$wp_customize->add_setting( 'vv_editorial_on', array( 'default' => true, 'sanitize_callback' => 'vv_sanitize_checkbox' ) );
+	$wp_customize->add_control( 'vv_editorial_on', array(
+		'label'   => __( 'Show this section', 'vastra-veda' ),
+		'section' => 'vv_editorial',
+		'type'    => 'checkbox',
+	) );
+
+	$wp_customize->add_setting( 'vv_editorial_heading', array(
+		'default'           => 'TAKE A MOMENT *to read*' . "\n" . 'STORIES, ARTICLES &' . "\n" . '*more from* VASTRA VEDA.',
+		'sanitize_callback' => 'wp_kses_post',
+	) );
+	$wp_customize->add_control( 'vv_editorial_heading', array(
+		'label'   => __( 'Heading', 'vastra-veda' ),
+		'section' => 'vv_editorial',
+		'type'    => 'textarea',
+	) );
+
+	$wp_customize->add_setting( 'vv_editorial_link_text', array(
+		'default'           => __( 'View All', 'vastra-veda' ),
+		'sanitize_callback' => 'sanitize_text_field',
+	) );
+	$wp_customize->add_control( 'vv_editorial_link_text', array(
+		'label'   => __( 'Link label', 'vastra-veda' ),
+		'section' => 'vv_editorial',
+		'type'    => 'text',
+	) );
+
+	$wp_customize->add_setting( 'vv_editorial_link_url', array( 'sanitize_callback' => 'esc_url_raw' ) );
+	$wp_customize->add_control( 'vv_editorial_link_url', array(
+		'label'       => __( 'Link URL', 'vastra-veda' ),
+		'description' => __( 'Defaults to your posts page.', 'vastra-veda' ),
+		'section'     => 'vv_editorial',
+		'type'        => 'url',
+	) );
+
+	/* ------------------------------------------------------------------
 	 * 4. New arrivals
 	 * --------------------------------------------------------------- */
 	$wp_customize->add_section( 'vv_arrivals', array(
-		'title' => __( '4 · New arrivals', 'vastra-veda' ),
+		'title' => __( '6 · New arrivals (not in the design)', 'vastra-veda' ),
 		'panel' => 'vv_home',
 	) );
 
-	$wp_customize->add_setting( 'vv_arrivals_on', array( 'default' => true, 'sanitize_callback' => 'vv_sanitize_checkbox' ) );
+	$wp_customize->add_setting( 'vv_arrivals_on', array( 'default' => false, 'sanitize_callback' => 'vv_sanitize_checkbox' ) );
 	$wp_customize->add_control( 'vv_arrivals_on', array(
 		'label'   => __( 'Show the new arrivals row', 'vastra-veda' ),
 		'section' => 'vv_arrivals',
@@ -223,7 +345,7 @@ function vv_customize_register( $wp_customize ) {
 	 * 5. Footer
 	 * --------------------------------------------------------------- */
 	$wp_customize->add_section( 'vv_footer', array(
-		'title' => __( '5 · Footer', 'vastra-veda' ),
+		'title' => __( '7 · Footer', 'vastra-veda' ),
 		'panel' => 'vv_home',
 	) );
 
@@ -265,6 +387,17 @@ function vv_customize_register( $wp_customize ) {
 		'label'   => __( 'Column 4 text', 'vastra-veda' ),
 		'section' => 'vv_footer',
 		'type'    => 'textarea',
+	) );
+
+	$wp_customize->add_setting( 'vv_drawer_note', array(
+		'default'           => __( 'Handloomed with care · Since heritage', 'vastra-veda' ),
+		'sanitize_callback' => 'sanitize_text_field',
+	) );
+	$wp_customize->add_control( 'vv_drawer_note', array(
+		'label'       => __( 'Slide-out menu footnote', 'vastra-veda' ),
+		'description' => __( 'Small line at the bottom of the slide-out menu. Empty hides it.', 'vastra-veda' ),
+		'section'     => 'vv_footer',
+		'type'        => 'text',
 	) );
 
 	/* Social profiles — leave a field empty to hide that icon. */

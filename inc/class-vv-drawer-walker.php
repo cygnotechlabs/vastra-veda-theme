@@ -69,7 +69,7 @@ class VV_Drawer_Walker extends Walker_Nav_Menu {
 			$output .= '<span class="vv-drawer__meta">' . esc_html(
 				sprintf(
 					/* translators: %s: number of items */
-					_n( '%s Item', '%s Items', (int) $count, 'vastra-veda' ),
+					_n( '%s item', '%s items', (int) $count, 'vastra-veda' ),
 					number_format_i18n( (int) $count )
 				)
 			) . '</span>';
