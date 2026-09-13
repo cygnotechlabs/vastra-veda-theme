@@ -330,12 +330,77 @@
 		evaluate();
 	}
 
+	/* ------------------------------------------------------------ 5 */
+	function initAuth() {
+		var auth = document.querySelector( '[data-vv-auth]' );
+		if ( ! auth ) {
+			return;
+		}
+
+		/* Login / Register tabs */
+		var tabs  = Array.prototype.slice.call( auth.querySelectorAll( '[data-vv-tab]' ) );
+		var panes = Array.prototype.slice.call( auth.querySelectorAll( '[data-vv-pane]' ) );
+		var strip = auth.querySelector( '.vv-auth__tabs' );
+
+		function show( name ) {
+			tabs.forEach( function ( t ) {
+				var on = t.getAttribute( 'data-vv-tab' ) === name;
+				t.classList.toggle( 'is-active', on );
+				t.setAttribute( 'aria-selected', on ? 'true' : 'false' );
+			} );
+			panes.forEach( function ( p ) {
+				p.classList.toggle( 'is-active', p.getAttribute( 'data-vv-pane' ) === name );
+			} );
+			if ( strip ) {
+				strip.classList.toggle( 'is-register', 'register' === name );
+			}
+			try {
+				var url = new URL( window.location.href );
+				if ( 'register' === name ) {
+					url.searchParams.set( 'action', 'register' );
+				} else {
+					url.searchParams.delete( 'action' );
+				}
+				window.history.replaceState( {}, '', url );
+			} catch ( e ) { /* older browsers: no deep link, no harm */ }
+		}
+
+		tabs.forEach( function ( t ) {
+			t.addEventListener( 'click', function () { show( t.getAttribute( 'data-vv-tab' ) ); } );
+		} );
+
+		if ( strip && strip.querySelector( '[data-vv-tab="register"].is-active' ) ) {
+			strip.classList.add( 'is-register' );
+		}
+
+		/* If the server bounced back a registration error, open that tab */
+		if ( document.querySelector( '.woocommerce-error' ) &&
+			 /register/i.test( window.location.search ) ) {
+			show( 'register' );
+		}
+
+		/* Show / hide password */
+		Array.prototype.forEach.call( auth.querySelectorAll( '[data-vv-reveal]' ), function ( btn ) {
+			btn.addEventListener( 'click', function () {
+				var input = btn.parentNode.querySelector( 'input' );
+				if ( ! input ) {
+					return;
+				}
+				var hidden = 'password' === input.type;
+				input.type = hidden ? 'text' : 'password';
+				btn.setAttribute( 'aria-label', hidden ? 'Hide password' : 'Show password' );
+				btn.classList.toggle( 'is-on', hidden );
+			} );
+		} );
+	}
+
 	/* ------------------------------------------------------------ boot */
 	ready( function () {
 		initHeader();
 		initHero();
 		initOverlays();
 		initCategories();
+		initAuth();
 	} );
 
 	/* Keep the floating pill in sync after AJAX add-to-cart. */

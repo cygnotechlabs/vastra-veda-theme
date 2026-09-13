@@ -422,6 +422,73 @@ function vv_customize_register( $wp_customize ) {
 		) );
 	}
 
+	/* ------------------------------------------------------------------
+	 * Account (login / register panel)
+	 * --------------------------------------------------------------- */
+	$wp_customize->add_section( 'vv_account', array(
+		'title'       => __( 'Account page', 'vastra-veda' ),
+		'priority'    => 25,
+		'description' => __( 'The split panel shown to logged-out visitors on My Account.', 'vastra-veda' ),
+	) );
+
+	$wp_customize->add_setting( 'vv_account_image', array( 'sanitize_callback' => 'absint' ) );
+	$wp_customize->add_control(
+		new WP_Customize_Media_Control(
+			$wp_customize,
+			'vv_account_image',
+			array(
+				'label'     => __( 'Side image', 'vastra-veda' ),
+				'section'   => 'vv_account',
+				'mime_type' => 'image',
+			)
+		)
+	);
+
+	$wp_customize->add_setting( 'vv_account_title', array(
+		'default'           => __( 'Welcome', 'vastra-veda' ),
+		'sanitize_callback' => 'sanitize_text_field',
+	) );
+	$wp_customize->add_control( 'vv_account_title', array(
+		'label'   => __( 'Heading', 'vastra-veda' ),
+		'section' => 'vv_account',
+		'type'    => 'text',
+	) );
+
+	$wp_customize->add_setting( 'vv_account_quote', array(
+		'default'           => __( '“Every drape is a quiet inheritance, worn forward.”', 'vastra-veda' ),
+		'sanitize_callback' => 'sanitize_text_field',
+	) );
+	$wp_customize->add_control( 'vv_account_quote', array(
+		'label'   => __( 'Pull quote', 'vastra-veda' ),
+		'section' => 'vv_account',
+		'type'    => 'textarea',
+	) );
+
+	$wp_customize->add_setting( 'vv_account_stamp', array(
+		'default'           => __( 'Vastra Veda · Est. Heritage', 'vastra-veda' ),
+		'sanitize_callback' => 'sanitize_text_field',
+	) );
+	$wp_customize->add_control( 'vv_account_stamp', array(
+		'label'   => __( 'Small line under the quote', 'vastra-veda' ),
+		'section' => 'vv_account',
+		'type'    => 'text',
+	) );
+
+	$wp_customize->add_setting( 'vv_account_google_url', array( 'sanitize_callback' => 'esc_url_raw' ) );
+	$wp_customize->add_control( 'vv_account_google_url', array(
+		'label'       => __( 'Google sign-in URL', 'vastra-veda' ),
+		'description' => __( 'Needs a social-login plugin. Leave both empty and the social buttons are hidden rather than shown dead.', 'vastra-veda' ),
+		'section'     => 'vv_account',
+		'type'        => 'url',
+	) );
+
+	$wp_customize->add_setting( 'vv_account_apple_url', array( 'sanitize_callback' => 'esc_url_raw' ) );
+	$wp_customize->add_control( 'vv_account_apple_url', array(
+		'label'   => __( 'Apple sign-in URL', 'vastra-veda' ),
+		'section' => 'vv_account',
+		'type'    => 'url',
+	) );
+
 	/* Live-refresh the simple text bits. */
 	$wp_customize->get_setting( 'blogname' )->transport = 'postMessage';
 }

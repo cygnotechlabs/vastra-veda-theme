@@ -52,6 +52,12 @@ function vv_icon( $name, $size = 18 ) {
 		'plus'   => '<path d="M12 5v14M5 12h14"/>',
 		'heart'  => '<path d="M12 20s-7-4.6-7-9.4A4.1 4.1 0 0 1 12 7.7a4.1 4.1 0 0 1 7 2.9C19 15.4 12 20 12 20Z"/>',
 		'menu'   => '<path d="M4 8h16M4 16h16"/>',
+		'eye'    => '<path d="M2.5 12S6 5.8 12 5.8 21.5 12 21.5 12 18 18.2 12 18.2 2.5 12 2.5 12Z"/><circle cx="12" cy="12" r="3"/>',
+		'eye-off'=> '<path d="M4 4l16 16"/><path d="M9.9 5.2A9.6 9.6 0 0 1 12 5c6 0 9.5 7 9.5 7a17 17 0 0 1-3 3.8M6.4 7.5A16.6 16.6 0 0 0 2.5 12S6 19 12 19a9.4 9.4 0 0 0 3.5-.7"/>',
+		'user'   => '<circle cx="12" cy="8.4" r="3.6"/><path d="M4.8 19.6a7.2 7.2 0 0 1 14.4 0"/>',
+		'box'    => '<path d="M12 3.6 20 8v8l-8 4.4L4 16V8l8-4.4Z"/><path d="M4 8l8 4.4L20 8M12 12.4V20.4"/>',
+		'pin'    => '<path d="M12 21s6.5-5.6 6.5-10.3A6.5 6.5 0 0 0 5.5 10.7C5.5 15.4 12 21 12 21Z"/><circle cx="12" cy="10.5" r="2.4"/>',
+		'logout' => '<path d="M9 4.5H5.5a1.5 1.5 0 0 0-1.5 1.5v12a1.5 1.5 0 0 0 1.5 1.5H9"/><path d="M15 8l4 4-4 4M19 12H9"/>',
 		/* Social glyphs — simple outline marks, sized for the 36px rings. */
 		'facebook'  => '<path d="M14.6 7.2h1.6V4.6h-2.2c-1.9 0-3.1 1.2-3.1 3.2v1.9H8.6v2.6h2.3V19.4h2.7v-7.1h2.2l.4-2.6h-2.6V8.2c0-.7.3-1 1-1Z"/>',
 		'instagram' => '<rect x="4.4" y="4.4" width="15.2" height="15.2" rx="4.4"/><circle cx="12" cy="12" r="3.6"/><circle cx="16.6" cy="7.4" r=".9" fill="currentColor" stroke="none"/>',
@@ -391,4 +397,52 @@ function vv_post_eyebrow( $post_id = null ) {
 		return $terms[0]->name;
 	}
 	return __( 'Journal', 'vastra-veda' );
+}
+
+/**
+ * Social sign-in buttons under the auth forms.
+ *
+ * These are off until you wire a social-login plugin and paste its endpoint
+ * URLs into Customize → Account. Dead buttons are worse than none, so nothing
+ * renders when the URLs are empty.
+ */
+function vv_auth_social() {
+	$providers = array(
+		'google' => array( __( 'Google', 'vastra-veda' ), get_theme_mod( 'vv_account_google_url' ) ),
+		'apple'  => array( __( 'Apple', 'vastra-veda' ),  get_theme_mod( 'vv_account_apple_url' ) ),
+	);
+	$providers = array_filter( $providers, function ( $p ) { return ! empty( $p[1] ); } );
+
+	if ( ! $providers ) {
+		return;
+	}
+	?>
+	<div class="vv-auth__or"><span><?php esc_html_e( 'Or continue with', 'vastra-veda' ); ?></span></div>
+	<div class="vv-auth__social">
+		<?php foreach ( $providers as $key => $p ) : ?>
+			<a class="vv-auth__social-btn vv-auth__social-btn--<?php echo esc_attr( $key ); ?>"
+				href="<?php echo esc_url( $p[1] ); ?>" rel="nofollow">
+				<?php echo esc_html( $p[0] ); ?>
+			</a>
+		<?php endforeach; ?>
+	</div>
+	<?php
+}
+
+/**
+ * Icon for each WooCommerce account menu endpoint.
+ */
+function vv_account_icon( $endpoint ) {
+	$map = array(
+		'dashboard'       => 'user',
+		'orders'          => 'box',
+		'downloads'       => 'box',
+		'edit-address'    => 'pin',
+		'edit-account'    => 'user',
+		'payment-methods' => 'box',
+		'customer-logout' => 'logout',
+		'wishlist'        => 'heart',
+	);
+
+	return isset( $map[ $endpoint ] ) ? $map[ $endpoint ] : 'arrow';
 }
