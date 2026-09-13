@@ -507,6 +507,95 @@ function vv_customize_register( $wp_customize ) {
 		'section' => 'vv_story', 'type' => 'text',
 	) );
 
+	$wp_customize->add_setting( 'vv_story_lede', array(
+		'default'           => __( 'We began with one question — who actually wove this? Every saree here can answer it, by name, by loom, by village.', 'vastra-veda' ),
+		'sanitize_callback' => 'sanitize_textarea_field',
+	) );
+	$wp_customize->add_control( 'vv_story_lede', array(
+		'label'       => __( 'Opening line', 'vastra-veda' ),
+		'description' => __( 'PLACEHOLDER — replace before launch. The page excerpt overrides this if set.', 'vastra-veda' ),
+		'section'     => 'vv_story',
+		'type'        => 'textarea',
+	) );
+
+	/* Two alternating image + text blocks */
+	for ( $vv_i = 1; $vv_i <= 2; $vv_i++ ) {
+		$wp_customize->add_setting( "vv_story_s{$vv_i}_image", array( 'sanitize_callback' => 'absint' ) );
+		$wp_customize->add_control(
+			new WP_Customize_Media_Control(
+				$wp_customize,
+				"vv_story_s{$vv_i}_image",
+				array(
+					/* translators: %d: block number */
+					'label'     => sprintf( __( 'Block %d — image', 'vastra-veda' ), $vv_i ),
+					'section'   => 'vv_story',
+					'mime_type' => 'image',
+				)
+			)
+		);
+
+		$wp_customize->add_setting( "vv_story_s{$vv_i}_title", array( 'sanitize_callback' => 'sanitize_text_field' ) );
+		$wp_customize->add_control( "vv_story_s{$vv_i}_title", array(
+			/* translators: %d: block number */
+			'label'       => sprintf( __( 'Block %d — heading', 'vastra-veda' ), $vv_i ),
+			'description' => 1 === $vv_i ? __( 'PLACEHOLDER copy ships in these blocks — replace before launch. Empty the heading and text to hide a block.', 'vastra-veda' ) : '',
+			'section'     => 'vv_story',
+			'type'        => 'text',
+		) );
+
+		$wp_customize->add_setting( "vv_story_s{$vv_i}_text", array( 'sanitize_callback' => 'sanitize_textarea_field' ) );
+		$wp_customize->add_control( "vv_story_s{$vv_i}_text", array(
+			/* translators: %d: block number */
+			'label'   => sprintf( __( 'Block %d — text', 'vastra-veda' ), $vv_i ),
+			'section' => 'vv_story',
+			'type'    => 'textarea',
+		) );
+
+		$wp_customize->add_setting( "vv_story_s{$vv_i}_note", array( 'sanitize_callback' => 'sanitize_text_field' ) );
+		$wp_customize->add_control( "vv_story_s{$vv_i}_note", array(
+			/* translators: %d: block number */
+			'label'   => sprintf( __( 'Block %d — small line', 'vastra-veda' ), $vv_i ),
+			'section' => 'vv_story',
+			'type'    => 'text',
+		) );
+	}
+
+	/* Figures band */
+	for ( $vv_i = 1; $vv_i <= 4; $vv_i++ ) {
+		$wp_customize->add_setting( "vv_story_stat{$vv_i}_figure", array( 'sanitize_callback' => 'sanitize_text_field' ) );
+		$wp_customize->add_control( "vv_story_stat{$vv_i}_figure", array(
+			/* translators: %d: figure number */
+			'label'       => sprintf( __( 'Figure %d — number', 'vastra-veda' ), $vv_i ),
+			'description' => 1 === $vv_i ? __( 'PLACEHOLDER numbers — these are claims customers will read as fact. Replace them with your real ones or empty all four to hide the band.', 'vastra-veda' ) : '',
+			'section'     => 'vv_story',
+			'type'        => 'text',
+		) );
+
+		$wp_customize->add_setting( "vv_story_stat{$vv_i}_label", array( 'sanitize_callback' => 'sanitize_text_field' ) );
+		$wp_customize->add_control( "vv_story_stat{$vv_i}_label", array(
+			/* translators: %d: figure number */
+			'label'   => sprintf( __( 'Figure %d — label', 'vastra-veda' ), $vv_i ),
+			'section' => 'vv_story',
+			'type'    => 'text',
+		) );
+	}
+
+	/* Pull quote */
+	$wp_customize->add_setting( 'vv_story_quote', array( 'sanitize_callback' => 'sanitize_textarea_field' ) );
+	$wp_customize->add_control( 'vv_story_quote', array(
+		'label'       => __( 'Pull quote', 'vastra-veda' ),
+		'description' => __( 'PLACEHOLDER — replace before launch. Empty hides the section.', 'vastra-veda' ),
+		'section'     => 'vv_story',
+		'type'        => 'textarea',
+	) );
+
+	$wp_customize->add_setting( 'vv_story_quote_cite', array( 'sanitize_callback' => 'sanitize_text_field' ) );
+	$wp_customize->add_control( 'vv_story_quote_cite', array(
+		'label'   => __( 'Quote attribution', 'vastra-veda' ),
+		'section' => 'vv_story',
+		'type'    => 'text',
+	) );
+
 	for ( $vv_i = 1; $vv_i <= 3; $vv_i++ ) {
 		$wp_customize->add_setting( "vv_story_p{$vv_i}_title", array( 'sanitize_callback' => 'sanitize_text_field' ) );
 		$wp_customize->add_control( "vv_story_p{$vv_i}_title", array(
